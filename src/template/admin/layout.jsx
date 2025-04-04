@@ -4,6 +4,7 @@ import { Avatar, Dropdown, Layout, Menu, theme } from "antd";
 const { Header, Content, Footer, Sider } = Layout;
 import logo from "../../assets/logo.jpg";
 import { Flex } from "antd";
+import { Outlet } from "react-router-dom";
 
 const sidebarItems = [UserOutlined, VideoCameraOutlined].map(
   (IconComponent, index) => {
@@ -103,7 +104,7 @@ const LayoutAdmin = () => {
             background: colorBgContainer,
           }}
         >
-          Content
+          <Outlet />
         </Content>
         <Footer style={{ textAlign: "center" }}>
           Design ©{new Date().getFullYear()} Created by Minh Nguyen
