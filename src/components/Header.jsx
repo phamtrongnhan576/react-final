@@ -1,8 +1,12 @@
-import React from "react";
-import { Layout } from "antd";
-import { NavLink } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
 const Header = () => {
+    const [indicatorStyle, setIndicatorStyle] = useState({});
+    const [isScrolled, setIsScrolled] = useState(false);
+    const navRef = useRef(null);
+    const location = useLocation();
+
     const menuItems = [
         { key: "home", label: "HOME", to: "/" },
         {
@@ -14,45 +18,78 @@ const Header = () => {
         { key: "login", label: "LOGIN", to: "/login" },
     ];
 
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 0) {
+                setIsScrolled(true);
+            } else {
+                setIsScrolled(false);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    useEffect(() => {
+        const activeItem = navRef.current?.querySelector(".active");
+        if (activeItem) {
+            setIndicatorStyle({
+                width: activeItem.offsetWidth,
+                left: activeItem.offsetLeft,
+                transition: "all 100ms ease-in-out",
+            });
+        }
+    }, [location]);
+
     return (
-        <Layout>
-            <header className="text-white py-7">
-                <div className="container">
-                    <div className="flex justify-between items-center">
-                        <div className="logo">
-                            <a
-                                href="/"
-                                className="flex items-center text-3xl font-bold"
-                            >
-                                <h1>MoviesHand</h1>
-                            </a>
-                        </div>
-                        <nav>
-                            <ul className="flex">
-                                {menuItems.map((item) => (
-                                    <li key={item.key}>
-                                        <NavLink
-                                            to={item.to}
-                                            className={({ isActive }) =>
-                                                `relative text-white hover:text-gray-300 py-2 px-4 text-[16px] pb-5
-                                                after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[1px] 
-                                                ${
-                                                    isActive
-                                                        ? "after:bg-red-500 after:h-[2px]"
-                                                        : "after:bg-gray-200"
-                                                }`
-                                            }
-                                        >
-                                            {item.label}
-                                        </NavLink>
-                                    </li>
-                                ))}
-                            </ul>
-                        </nav>
+        <header
+            className={`w-full z-50 py-6 transition-all duration-300 ${
+                isScrolled
+                    ? "fixed top-0 bg-black/50"
+                    : "absolute top-0 bg-black/30"
+            }`}
+        >
+            <div className="container mx-auto px-4">
+                <div className="flex justify-between items-center">
+                    <div className="logo">
+                        <NavLink
+                            to="/"
+                            className="flex items-center text-3xl font-bold"
+                        >
+                            <h1 className="text-white font-bold text-3xl">
+                                M<span className="text-[#FFA500]">ovies</span>H
+                                <span className="text-[#FFA500]">and</span>
+                            </h1>
+                        </NavLink>
                     </div>
+                    <nav className="relative" ref={navRef}>
+                        <ul className="flex">
+                            {menuItems.map((item) => (
+                                <li key={item.key}>
+                                    <NavLink
+                                        to={item.to}
+                                        className={({ isActive }) =>
+                                            `relative text-white hover:text-gray-200 py-2 px-4 text-[16px] pb-5
+                                            after:content-[''] after:absolute after:left-0 after:bottom-[-26%] after:w-full after:h-[3px] 
+                                            after:bg-gray-400/50  
+                                            ${isActive ? "active " : ""}`
+                                        }
+                                    >
+                                        {item.label}
+                                    </NavLink>
+                                </li>
+                            ))}
+                        </ul>
+
+                        <div
+                            className="absolute bottom-[-125%] h-[3px] bg-[#FFA500] z-10 rounded-full"
+                            style={indicatorStyle}
+                        />
+                    </nav>
                 </div>
-            </header>
-        </Layout>
+            </div>
+        </header>
     );
 };
 
