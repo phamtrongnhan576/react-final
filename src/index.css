@@ -71,3 +71,6 @@
     margin: 8px 0;
     background-color: transparent !important;
 }
+.ant-tabs > .ant-tabs-nav .ant-tabs-nav-more {
+    display: none;
+}
