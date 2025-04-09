@@ -3,15 +3,18 @@ import FirmService from "../../services/firmService.js";
 
 export const fetchFilms = createAsyncThunk(
   "admin/fetchFilms",
-  async ({ page = 1, itemsPerPage = 10 }, { rejectWithValue }) => {
+  async ({ currentPage = 1, itemsPerPage = 10 }, { rejectWithValue }) => {
     try {
-      const data = await FirmService.getFilmsPaginated(page, itemsPerPage);
+      const data = await FirmService.getFilmsPaginated(
+        currentPage,
+        itemsPerPage
+      );
       return {
         items: data.items,
         pagination: {
-          currentPage: page,
+          currentPage,
           itemsPerPage,
-          totalItems: data.totalItems,
+          totalCount: data.totalCount,
           totalPages: data.totalPages,
         },
       };
@@ -28,6 +31,7 @@ export const updateFilm = createAsyncThunk(
       const updatedFilm = await FirmService.updateFilm(filmData);
       return updatedFilm;
     } catch (error) {
+      console.log("error updateFilm: ", error.message);
       return rejectWithValue(error.message);
     }
   }
@@ -37,8 +41,8 @@ export const deleteFilm = createAsyncThunk(
   "admin/deleteFilm",
   async (filmId, { rejectWithValue }) => {
     try {
-      await FirmService.deleteFilm(filmId);
-      return filmId;
+      const deletedFilm = await FirmService.deleteFilm(filmId);
+      return deletedFilm;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -66,7 +70,7 @@ const adminSlice = createSlice({
     pagination: {
       currentPage: 1,
       itemsPerPage: 10,
-      totalItems: 0,
+      totalCount: 0,
       totalPages: 0,
     },
   },
@@ -102,17 +106,16 @@ const adminSlice = createSlice({
       })
       .addCase(updateFilm.fulfilled, (state, action) => {
         state.loading = false;
-        // Cập nhật film trong danh sách
         const index = state.films.findIndex(
-          (film) => film.maPhim === action.payload.maPhim
+          (film) => film.maPhim === action.payload.content.maPhim
         );
         if (index !== -1) {
-          state.films[index] = action.payload;
+          state.films[index] = action.payload.content;
         }
       })
       .addCase(updateFilm.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || action.error.message;
       })
       .addCase(deleteFilm.pending, (state) => {
         state.loading = true;
@@ -120,22 +123,31 @@ const adminSlice = createSlice({
       })
       .addCase(deleteFilm.fulfilled, (state, action) => {
         state.loading = false;
-        // Xóa film khỏi danh sách
+
         state.films = state.films.filter(
-          (film) => film.maPhim !== action.payload
+          (film) => film.maPhim !== action.payload.content.maPhim
         );
-        // Giảm totalItems đi 1
-        state.pagination.totalItems -= 1;
+
+        state.pagination.totalCount -= 1;
         state.pagination.totalPages = Math.ceil(
-          state.pagination.totalItems / state.pagination.itemsPerPage
+          state.pagination.totalCount / state.pagination.itemsPerPage
         );
       })
       .addCase(deleteFilm.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || action.error.message;
+      })
+      .addCase(addFilm.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       })
       .addCase(addFilm.fulfilled, (state, action) => {
-        state.films.unshift(action.payload);
+        state.loading = false;
+        state.films.unshift(action.payload.content);
+      })
+      .addCase(addFilm.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || action.error.message;
       });
   },
 });

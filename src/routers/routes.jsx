@@ -4,7 +4,7 @@ import Home from "../pages/Home";
 import SeatSelection from "../pages/SeatSelection";
 import Detail from "../pages/Detail";
 import Error404 from "../pages/Error404";
-import AdminDashBoardPage from "../pages/admin/AdminDashBoard.jsx";
+import AdminDashBoardPage from "../pages/admin/AdminDashboardPage.jsx";
 import AdminUsersPage from "../pages/admin/AdminUsers.jsx";
 import LoginPage from "../pages/auth/pages/Login.jsx";
 import RegisterPage from "../pages/auth/pages/Register.jsx";

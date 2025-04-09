@@ -1,38 +1,27 @@
 import React from "react";
 import { UserOutlined, VideoCameraOutlined } from "@ant-design/icons";
-import { Avatar, Dropdown, Layout, Menu, theme } from "antd";
-const { Header, Content, Footer, Sider } = Layout;
-import logo from "../../assets/logo.jpg";
-import { Flex } from "antd";
+import { Avatar, Dropdown, Layout, Menu, theme, Flex } from "antd";
 import { Outlet } from "react-router-dom";
+import logo from "../../assets/logo.jpg";
 
-const sidebarItems = [UserOutlined, VideoCameraOutlined].map(
-  (IconComponent, index) => {
-    const menuKey = String(index + 1);
-    const submenuLength = index === 0 ? 0 : 2;
-    const menuLabel = index === 0 ? "User" : "Cinema";
+const { Header, Content, Footer, Sider } = Layout;
 
-    const menuItem = {
-      key: `sub${menuKey}`,
-      icon: React.createElement(IconComponent),
-      label: menuLabel,
-    };
-
-    if (submenuLength > 0) {
-      menuItem.children = Array.from({ length: submenuLength }).map(
-        (_, subIndex) => {
-          const submenuKey = index * 2 + subIndex + 1;
-          return {
-            key: submenuKey,
-            label: subIndex === 0 ? "List Films" : "Add Film",
-          };
-        }
-      );
-    }
-
-    return menuItem;
-  }
-);
+const sidebarItems = [
+  {
+    key: "sub1",
+    icon: <UserOutlined />,
+    label: "User",
+  },
+  {
+    key: "sub2",
+    icon: <VideoCameraOutlined />,
+    label: "Cinema",
+    children: [
+      { key: "1", label: "List Films" },
+      { key: "2", label: "Add Film" },
+    ],
+  },
+];
 
 const avatarMenuItems = [{ key: "1", label: "Logout" }];
 
@@ -41,33 +30,27 @@ const LayoutAdmin = () => {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const renderDropdown = (menu) => <div style={{ width: "200px" }}>{menu}</div>;
-
   return (
-    <Layout
-      style={{ minHeight: "100vh", display: "flex", flexDirection: "row" }}
-    >
+    <Layout style={{ minHeight: "100vh" }}>
       <Sider
-        style={{
-          background: colorBgContainer,
-          overflow: "auto",
-        }}
+        style={{ background: colorBgContainer }}
         width={200}
+        breakpoint="lg"
+        collapsedWidth="0"
       >
-        <Flex
-          justify="center"
-          gap={4}
-          align="center"
-          style={{ padding: "16px 0" }}
-        >
-          <img src={logo} alt="Logo" style={{ height: "40px" }} />
-          <h1>CineVista Theater</h1>
+        <Flex justify="center" align="center" style={{ padding: "16px 0" }}>
+          <img
+            src={logo}
+            alt="Logo"
+            style={{ height: "40px", marginRight: 8 }}
+          />
+          <span style={{ fontWeight: "bold" }}>CineVista Theater</span>
         </Flex>
         <Menu
           mode="inline"
           defaultSelectedKeys={["1"]}
           defaultOpenKeys={["sub1"]}
-          style={{ height: "calc(100% - 80px)" }}
+          style={{ height: "100%" }}
           items={sidebarItems}
         />
       </Sider>
@@ -76,30 +59,27 @@ const LayoutAdmin = () => {
           style={{
             display: "flex",
             alignItems: "center",
-            background: "white",
+            background: colorBgContainer,
             justifyContent: "flex-end",
             padding: "0 24px",
-            height: "64px",
-            lineHeight: "64px",
           }}
         >
           <Dropdown
             menu={{ items: avatarMenuItems }}
             trigger={["click"]}
             placement="bottomRight"
-            dropdownRender={renderDropdown}
+            overlayStyle={{ width: 200 }}
           >
             <Avatar
               shape="circle"
               icon={<UserOutlined />}
-              className="cursor-pointer"
+              style={{ cursor: "pointer" }}
             />
           </Dropdown>
         </Header>
         <Content
           style={{
             padding: "24px",
-            flex: 1,
             overflow: "auto",
             background: colorBgContainer,
           }}
