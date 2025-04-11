@@ -6,6 +6,7 @@ import {
   addUser,
   deleteUser,
   updateUser,
+  searchUsers,
 } from "../store/admin/adminUserSlice";
 import { Form, message } from "antd";
 
@@ -19,16 +20,18 @@ export const useUserManagement = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const [fileList, setFileList] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
-    dispatch(
-      fetchUsers({
-        currentPage: pagination.currentPage,
-        itemsPerPage: pagination.itemsPerPage,
-      })
-    );
-  }, [dispatch, pagination.currentPage, pagination.itemsPerPage]);
+    if (!isSearching) {
+      dispatch(
+        fetchUsers({
+          currentPage: pagination.currentPage,
+          itemsPerPage: pagination.itemsPerPage,
+        })
+      );
+    }
+  }, [dispatch, pagination.currentPage, pagination.itemsPerPage, isSearching]);
 
   const handlePageChange = (currentPage, itemsPerPage) => {
     dispatch(setPagination({ currentPage, itemsPerPage }));
@@ -36,7 +39,6 @@ export const useUserManagement = () => {
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
-    setFileList([]);
     form.resetFields();
   };
 
@@ -50,6 +52,7 @@ export const useUserManagement = () => {
       .unwrap()
       .then(() => {
         message.success(`Đã xóa người dùng: ${currentUser?.hoTen}`);
+        setIsSearching(false);
         dispatch(
           fetchUsers({
             currentPage: pagination.currentPage,
@@ -64,7 +67,6 @@ export const useUserManagement = () => {
   const handleCreate = () => {
     setCurrentUser(null);
     form.resetFields();
-    setFileList([]);
     setIsModalVisible(true);
   };
 
@@ -103,6 +105,7 @@ export const useUserManagement = () => {
         .then(() => {
           message.success(successMessage);
           handleModalCancel();
+          setIsSearching(false);
           dispatch(
             fetchUsers({
               currentPage: pagination.currentPage,
@@ -116,6 +119,31 @@ export const useUserManagement = () => {
     });
   };
 
+  const handleSearch = ({ keyword }) => {
+    if (!keyword || keyword.trim() === "") {
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+    dispatch(
+      searchUsers({
+        keyword,
+        currentPage: 1,
+        itemsPerPage: pagination.itemsPerPage,
+      })
+    )
+      .unwrap()
+      .then(() => {
+        message.success(`Tìm kiếm với từ khóa: ${keyword}`);
+      })
+      .catch(() => {
+        message.error(
+          `Lỗi khi tìm kiếm: ${error.message || "Không thể xử lý"}`
+        );
+      });
+  };
+
   return {
     users,
     loading,
@@ -125,8 +153,6 @@ export const useUserManagement = () => {
     isModalVisible,
     isDeleteModalVisible,
     currentUser,
-    fileList,
-    setFileList,
     handlePageChange,
     handleEdit,
     handleDelete,
@@ -134,5 +160,6 @@ export const useUserManagement = () => {
     handleCreate,
     handleModalCancel,
     handleModalSubmit,
+    handleSearch,
   };
 };

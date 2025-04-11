@@ -1,6 +1,34 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import UserService from "../../services/userService.js";
 
+export const searchUsers = createAsyncThunk(
+  "adminUser/searchUsers",
+  async (
+    { keyword, currentPage = 1, itemsPerPage = 10 },
+    { rejectWithValue }
+  ) => {
+    try {
+      const data = await UserService.searchUsersPaginated(
+        keyword,
+        currentPage,
+        itemsPerPage
+      );
+
+      return {
+        items: data.items,
+        pagination: {
+          currentPage,
+          itemsPerPage,
+          totalCount: data.totalCount,
+          totalPages: data.totalPages,
+        },
+      };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const fetchUsers = createAsyncThunk(
   "adminUser/fetchUsers",
   async ({ currentPage = 1, itemsPerPage = 10 }, { rejectWithValue }) => {
@@ -85,6 +113,22 @@ const adminUserSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(searchUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = action.payload.items;
+        state.pagination = {
+          ...state.pagination,
+          ...action.payload.pagination,
+        };
+      })
+      .addCase(searchUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || action.error.message;
+      })
       .addCase(fetchUsers.pending, (state) => {
         state.loading = true;
         state.error = null;

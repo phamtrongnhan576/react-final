@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Form, Input } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import UserFormModal from "../../components/admin/model/UserFormModal";
 import DeleteUserModal from "../../components/admin/model/DeleteUserModal";
@@ -6,6 +6,8 @@ import { useUserManagement } from "../../hooks/useUserManagement";
 import LoadingSpinner from "../../components/admin/shared/LoadingSpinner";
 import ErrorResult from "../../components/admin/shared/ErrorResult";
 import UserTable from "../../components/admin/table/UserTable";
+
+const { Search } = Input;
 
 const AdminUsersPage = () => {
   const {
@@ -18,8 +20,6 @@ const AdminUsersPage = () => {
     isDeleteModalVisible,
     setIsDeleteModalVisible,
     currentUser,
-    fileList,
-    setFileList,
     handlePageChange,
     handleEdit,
     handleDelete,
@@ -27,7 +27,7 @@ const AdminUsersPage = () => {
     handleCreate,
     handleModalCancel,
     handleModalSubmit,
-    beforeUpload,
+    handleSearch,
   } = useUserManagement();
 
   if (loading) return <LoadingSpinner />;
@@ -41,6 +41,17 @@ const AdminUsersPage = () => {
           Thêm người dùng mới
         </Button>
       </div>
+
+      <Form form={form} onFinish={handleSearch}>
+        <Form.Item name="keyword">
+          <Search
+            placeholder="Nhập vào tài khoản hoặc họ tên người dùng"
+            enterButton="Tìm kiếm"
+            size="large"
+            onSearch={() => form.submit()}
+          />
+        </Form.Item>
+      </Form>
 
       <UserTable
         users={users}
@@ -57,9 +68,6 @@ const AdminUsersPage = () => {
         onSubmit={handleModalSubmit}
         form={form}
         currentUser={currentUser}
-        fileList={fileList}
-        setFileList={setFileList}
-        beforeUpload={beforeUpload}
       />
 
       <DeleteUserModal
