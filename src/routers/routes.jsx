@@ -5,7 +5,7 @@ import SeatSelection from "../pages/SeatSelection";
 import Detail from "../pages/Detail";
 import Error404 from "../pages/Error404";
 import AdminDashBoardPage from "../pages/admin/AdminDashboardPage.jsx";
-import AdminUsersPage from "../pages/admin/AdminUsers.jsx";
+import AdminUsersPage from "../pages/admin/AdminUsersPage.jsx";
 import LoginPage from "../pages/auth/pages/Login.jsx";
 import RegisterPage from "../pages/auth/pages/Register.jsx";
 import LayoutAuth from "../pages/auth/layout.jsx";
@@ -40,8 +40,8 @@ export const routes = [
     element: <LayoutAdmin />,
     children: [
       { index: true, element: <AdminDashBoardPage /> },
-      { path: "dashboard", element: <AdminDashBoardPage /> },
-      { path: "users", element: <AdminUsersPage /> },
+      { path: "film", element: <AdminDashBoardPage /> },
+      { path: "user", element: <AdminUsersPage /> },
       { path: "*", element: <Error404 /> },
     ],
   },

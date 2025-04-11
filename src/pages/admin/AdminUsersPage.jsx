@@ -1,15 +1,15 @@
 import { Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import FilmTable from "../../components/admin/table/FilmTable";
-import FilmFormModal from "../../components/admin/model/FilmFormModal";
-import DeleteConfirmModal from "../../components/admin/model/DeleteConfirmModal";
-import { useFilmManagement } from "../../hooks/useFilmManagement";
+import UserFormModal from "../../components/admin/model/UserFormModal";
+import DeleteUserModal from "../../components/admin/model/DeleteUserModal";
+import { useUserManagement } from "../../hooks/useUserManagement";
 import LoadingSpinner from "../../components/admin/shared/LoadingSpinner";
 import ErrorResult from "../../components/admin/shared/ErrorResult";
+import UserTable from "../../components/admin/table/UserTable";
 
-const AdminDashboardPage = () => {
+const AdminUsersPage = () => {
   const {
-    films,
+    users,
     loading,
     error,
     pagination,
@@ -17,7 +17,7 @@ const AdminDashboardPage = () => {
     isModalVisible,
     isDeleteModalVisible,
     setIsDeleteModalVisible,
-    currentFilm,
+    currentUser,
     fileList,
     setFileList,
     handlePageChange,
@@ -28,7 +28,7 @@ const AdminDashboardPage = () => {
     handleModalCancel,
     handleModalSubmit,
     beforeUpload,
-  } = useFilmManagement();
+  } = useUserManagement();
 
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorResult error={error} />;
@@ -36,14 +36,14 @@ const AdminDashboardPage = () => {
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Film Management</h1>
+        <h1 className="text-2xl font-bold">User Management</h1>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
-          Thêm phim mới
+          Thêm người dùng mới
         </Button>
       </div>
 
-      <FilmTable
-        films={films}
+      <UserTable
+        users={users}
         pagination={pagination}
         loading={loading}
         onPageChange={handlePageChange}
@@ -51,25 +51,25 @@ const AdminDashboardPage = () => {
         onDelete={handleDelete}
       />
 
-      <FilmFormModal
+      <UserFormModal
         visible={isModalVisible}
         onCancel={handleModalCancel}
         onSubmit={handleModalSubmit}
         form={form}
-        currentFilm={currentFilm}
+        currentUser={currentUser}
         fileList={fileList}
         setFileList={setFileList}
         beforeUpload={beforeUpload}
       />
 
-      <DeleteConfirmModal
+      <DeleteUserModal
         visible={isDeleteModalVisible}
         onConfirm={handleDeleteConfirm}
         onCancel={() => setIsDeleteModalVisible(false)}
-        currentFilm={currentFilm}
+        currentUser={currentUser}
       />
     </div>
   );
 };
 
-export default AdminDashboardPage;
+export default AdminUsersPage;

@@ -1,5 +1,7 @@
-import adminReducer from "./adminSlice.js";
+import adminFilmReducer from "./adminFilmSlice.js";
+import adminUserReducer from "./adminUserSlice.js";
 
 export default {
-  admin: adminReducer,
+  adminFilm: adminFilmReducer,
+  adminUser: adminUserReducer,
 };

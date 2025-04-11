@@ -1,34 +1,36 @@
 import React from "react";
 import { UserOutlined, VideoCameraOutlined } from "@ant-design/icons";
 import { Avatar, Dropdown, Layout, Menu, theme, Flex } from "antd";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.jpg";
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const sidebarItems = [
   {
-    key: "sub1",
+    key: "film",
+    icon: <VideoCameraOutlined />,
+    label: "Film",
+  },
+  {
+    key: "user",
     icon: <UserOutlined />,
     label: "User",
   },
-  {
-    key: "sub2",
-    icon: <VideoCameraOutlined />,
-    label: "Cinema",
-    children: [
-      { key: "1", label: "List Films" },
-      { key: "2", label: "Add Film" },
-    ],
-  },
 ];
 
-const avatarMenuItems = [{ key: "1", label: "Logout" }];
+const avatarMenuItems = [{ key: "logout", label: "Logout" }];
 
 const LayoutAdmin = () => {
+  const navigate = useNavigate();
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const handleClick = (e) => {
+    navigate(`/admin/${e.key}`);
+  };
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -48,10 +50,10 @@ const LayoutAdmin = () => {
         </Flex>
         <Menu
           mode="inline"
-          defaultSelectedKeys={["1"]}
-          defaultOpenKeys={["sub1"]}
+          defaultSelectedKeys={["film"]}
           style={{ height: "100%" }}
           items={sidebarItems}
+          onClick={handleClick}
         />
       </Sider>
       <Layout>

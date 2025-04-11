@@ -1,8 +1,8 @@
-import { Table, Pagination, Image } from "antd";
+import { Table, Pagination } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-const FilmTable = ({
-  films,
+const UserTable = ({
+  users,
   pagination,
   loading,
   onPageChange,
@@ -11,16 +11,16 @@ const FilmTable = ({
 }) => {
   const columns = [
     {
-      title: "Mã Phim",
-      dataIndex: "maPhim",
-      key: "maPhim",
-      sorter: (a, b) => a.maPhim - b.maPhim,
+      title: "STT",
+      key: "stt",
+      render: (text, record, index) =>
+        index + 1 + (pagination.currentPage - 1) * pagination.itemsPerPage,
     },
     {
-      title: "Tên Phim",
-      dataIndex: "tenPhim",
-      key: "tenPhim",
-      sorter: (a, b) => a.tenPhim.localeCompare(b.tenPhim),
+      title: "Tài Khoản",
+      dataIndex: "taiKhoan",
+      key: "taiKhoan",
+      sorter: (a, b) => a.taiKhoan.localeCompare(b.taiKhoan),
       render: (text) => (
         <div
           className="lg:w-[200px] w-[100px]"
@@ -35,27 +35,49 @@ const FilmTable = ({
       ),
     },
     {
-      title: "Hình Ảnh",
-      dataIndex: "hinhAnh",
-      key: "hinhAnh",
-      render: (text) => (
-        <Image
-          src={text}
-          alt="Poster phim"
-          width={50}
-          height={70}
-          style={{ objectFit: "cover" }}
-          preview
-        />
-      ),
-    },
-    {
-      title: "Mô Tả",
-      dataIndex: "moTa",
-      key: "moTa",
+      title: "Họ Tên",
+      dataIndex: "hoTen",
+      key: "hoTen",
+      sorter: (a, b) => a.hoTen.localeCompare(b.hoTen),
       render: (text) => (
         <div
           className="lg:w-[200px] w-[100px]"
+          style={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {text}
+        </div>
+      ),
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      sorter: (a, b) => a.email.localeCompare(b.email),
+      render: (text) => (
+        <div
+          className="lg:w-[200px] w-[100px]"
+          style={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {text}
+        </div>
+      ),
+    },
+    {
+      title: "Số Điện Thoại",
+      dataIndex: "soDt",
+      key: "soDt",
+      sorter: (a, b) => a.soDt.localeCompare(b.soDt),
+      render: (text) => (
+        <div
+          className="lg:w-[150px] w-[80px]"
           style={{
             whiteSpace: "nowrap",
             overflow: "hidden",
@@ -78,7 +100,7 @@ const FilmTable = ({
             <EditOutlined style={{ fontSize: "20px" }} />
           </button>
           <button
-            onClick={() => onDelete(record.maPhim)}
+            onClick={() => onDelete(record.taiKhoan)}
             className="text-red-500 cursor-pointer"
           >
             <DeleteOutlined style={{ fontSize: "20px" }} />
@@ -91,10 +113,10 @@ const FilmTable = ({
   return (
     <>
       <Table
-        dataSource={films}
+        dataSource={users}
         columns={columns}
         pagination={false}
-        rowKey="maPhim"
+        rowKey="email"
         scroll={{ x: 800 }}
         loading={loading}
       />
@@ -107,11 +129,11 @@ const FilmTable = ({
           onShowSizeChange={onPageChange}
           showSizeChanger
           pageSizeOptions={[10, 20, 50, 100]}
-          showTotal={(total) => `Tổng ${total} phim`}
+          showTotal={(total) => `Tổng ${total} tài khoản`}
         />
       </div>
     </>
   );
 };
 
-export default FilmTable;
+export default UserTable;

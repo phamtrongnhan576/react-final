@@ -6,14 +6,14 @@ import {
   addFilm,
   deleteFilm,
   updateFilm,
-} from "../store/admin/adminSlice";
+} from "../store/admin/adminFilmSlice";
 import { Form, message, Upload } from "antd";
 import dayjs from "dayjs";
 
 export const useFilmManagement = () => {
   const dispatch = useDispatch();
   const { films, loading, error, pagination } = useSelector(
-    (state) => state.admin
+    (state) => state.adminFilm
   );
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);

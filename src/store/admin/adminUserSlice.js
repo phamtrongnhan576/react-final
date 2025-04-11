@@ -1,14 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import FirmService from "../../services/firmService.js";
+import UserService from "../../services/userService.js";
 
-export const fetchFilms = createAsyncThunk(
-  "admin/fetchFilms",
+export const fetchUsers = createAsyncThunk(
+  "adminUser/fetchUsers",
   async ({ currentPage = 1, itemsPerPage = 10 }, { rejectWithValue }) => {
     try {
-      const data = await FirmService.getFilmsPaginated(
+      const data = await UserService.getUsersPaginated(
         currentPage,
         itemsPerPage
       );
+
       return {
         items: data.items,
         pagination: {
@@ -24,47 +25,47 @@ export const fetchFilms = createAsyncThunk(
   }
 );
 
-export const updateFilm = createAsyncThunk(
-  "admin/updateFilm",
-  async (filmData, { rejectWithValue }) => {
+export const updateUser = createAsyncThunk(
+  "adminUser/updateUser",
+  async (userData, { rejectWithValue }) => {
     try {
-      const updatedFilm = await FirmService.updateFilm(filmData);
-      return updatedFilm;
+      const updatedUser = await UserService.updateUser(userData);
+      return updatedUser;
     } catch (error) {
-      console.log("error updateFilm: ", error.message);
+      console.log("error updateUser: ", error.message);
       return rejectWithValue(error.message);
     }
   }
 );
 
-export const deleteFilm = createAsyncThunk(
-  "admin/deleteFilm",
-  async (filmId, { rejectWithValue }) => {
+export const deleteUser = createAsyncThunk(
+  "adminUser/deleteUser",
+  async (taiKhoan, { rejectWithValue }) => {
     try {
-      const deletedFilm = await FirmService.deleteFilm(filmId);
-      return deletedFilm;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const addFilm = createAsyncThunk(
-  "admin/addFilm",
-  async (filmData, { rejectWithValue }) => {
-    try {
-      const newFilm = await FirmService.addFilm(filmData);
-      return newFilm;
+      const deletedUser = await UserService.deleteUser(taiKhoan);
+      return deletedUser;
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
 
-const adminSlice = createSlice({
-  name: "admin",
+export const addUser = createAsyncThunk(
+  "adminUser/addUser",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const newUser = await UserService.addUser(userData);
+      return newUser;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+const adminUserSlice = createSlice({
+  name: "adminUser",
   initialState: {
-    films: [],
+    users: [],
     loading: false,
     error: null,
     pagination: {
@@ -84,48 +85,48 @@ const adminSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchFilms.pending, (state) => {
+      .addCase(fetchUsers.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchFilms.fulfilled, (state, action) => {
+      .addCase(fetchUsers.fulfilled, (state, action) => {
         state.loading = false;
-        state.films = action.payload.items;
+        state.users = action.payload.items;
         state.pagination = {
           ...state.pagination,
           ...action.payload.pagination,
         };
       })
-      .addCase(fetchFilms.rejected, (state, action) => {
+      .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
       })
-      .addCase(updateFilm.pending, (state) => {
+      .addCase(updateUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateFilm.fulfilled, (state, action) => {
+      .addCase(updateUser.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.films.findIndex(
-          (film) => film.maPhim === action.payload.content.maPhim
+        const index = state.users.findIndex(
+          (user) => user.maPhim === action.payload.content.maPhim
         );
         if (index !== -1) {
-          state.films[index] = action.payload.content;
+          state.users[index] = action.payload.content;
         }
       })
-      .addCase(updateFilm.rejected, (state, action) => {
+      .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
       })
-      .addCase(deleteFilm.pending, (state) => {
+      .addCase(deleteUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteFilm.fulfilled, (state, action) => {
+      .addCase(deleteUser.fulfilled, (state, action) => {
         state.loading = false;
 
-        state.films = state.films.filter(
-          (film) => film.maPhim !== action.payload.content.maPhim
+        state.users = state.users.filter(
+          (user) => user.maPhim !== action.payload.content.maPhim
         );
 
         state.pagination.totalCount -= 1;
@@ -133,24 +134,24 @@ const adminSlice = createSlice({
           state.pagination.totalCount / state.pagination.itemsPerPage
         );
       })
-      .addCase(deleteFilm.rejected, (state, action) => {
+      .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
       })
-      .addCase(addFilm.pending, (state) => {
+      .addCase(addUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(addFilm.fulfilled, (state, action) => {
+      .addCase(addUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.films.unshift(action.payload.content);
+        state.users.unshift(action.payload.content);
       })
-      .addCase(addFilm.rejected, (state, action) => {
+      .addCase(addUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
       });
   },
 });
 
-export const { setPagination } = adminSlice.actions;
-export default adminSlice.reducer;
+export const { setPagination } = adminUserSlice.actions;
+export default adminUserSlice.reducer;
