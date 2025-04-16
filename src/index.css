@@ -58,7 +58,7 @@
 .slick-prev {
     left: -33px !important;
 }
-/* Custom ink-bar màu cam cho tab active */
+
 .cinema-tabs .ant-tabs-ink-bar {
     background-color: #ffa500 !important;
     width: 4px !important;
@@ -73,4 +73,25 @@
 }
 .ant-tabs > .ant-tabs-nav .ant-tabs-nav-more {
     display: none;
+}
+
+.custom-tab_detail .ant-tabs-ink-bar {
+    width: auto !important;
+}
+.custom-tab_detail .ant-tabs .ant-tabs-tab {
+    color: white;
+}
+.custom-tabs .ant-tabs-tab {
+    margin: 0;
+}
+.custom-tabs .ant-tabs .ant-tabs-tab {
+    display: initial;
+}
+.custom-tabs .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #ffa500;
+}
+
+.will-change-transform {
+    will-change: transform;
+    backface-visibility: hidden;
 }

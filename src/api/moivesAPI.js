@@ -18,3 +18,30 @@ export const getCinemaShowtime = async (maHeThongRap) => {
     );
     return res.data.content;
 };
+export const getMovieDetail = async (maPhim) => {
+    const res = await http.get(`QuanLyPhim/LayThongTinPhim?MaPhim=${maPhim}`);
+    return res.data.content;
+};
+
+export const getMovieShowtime = async (maPhim) => {
+    const res = await http.get(
+        `/QuanLyRap/LayThongTinLichChieuPhim?MaPhim=${maPhim}&maNhom=GP01`
+    );
+    return res.data.content;
+};
+
+export const getSeatList = async (maLichChieu) => {
+    const res = await http.get(
+        `/QuanLyDatVe/LayDanhSachPhongVe?MaLichChieu=${maLichChieu}`
+    );
+    return res.data.content;
+};
+
+export const checkLogin = async (loginData) => {
+    const res = await http.post("/QuanLyNguoiDung/DangNhap", loginData);
+    return res.data.content;
+};
+export const signUp = async (signUpData) => {
+    const res = await http.post("/QuanLyNguoiDung/DangKy", signUpData);
+    return res.data.content;
+};

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Tabs, Spin, Alert } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { getCinemaList, getCinemaShowtime } from "../api/moivesAPI";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+
 const CinemaSection = () => {
     const {
         data: cinemaList,
@@ -172,7 +172,7 @@ const CinemaSection = () => {
     });
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 ">
             <div className="mt-7">
                 <h2 className="text-lg font-bold uppercase text-white relative inline-block after:content-[''] after:block after:h-[3px] after:rounded-lg after:bg-[#FFA500] after:mt-2 after:w-full">
                     SHOWTIMES MOVIES

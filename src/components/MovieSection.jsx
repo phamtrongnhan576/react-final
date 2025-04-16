@@ -3,9 +3,8 @@ import { Tabs } from "antd";
 import Slider from "react-slick";
 import MovieCard from "./MovieCard";
 import { useQuery } from "@tanstack/react-query";
-import { getMovieList } from "../api/moivesAPI"; 
+import { getMovieList } from "../api/moivesAPI";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-
 const MovieSection = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ["MovieList"],
@@ -71,7 +70,7 @@ const MovieSection = () => {
                     <Slider {...settings} className="mt-8">
                         {comingSoonMovies.map((movie) => (
                             <div key={movie.maPhim} className="px-2">
-                                <MovieCard movie={movie} isShowing={false} />
+                                <MovieCard movie={movie} />
                             </div>
                         ))}
                     </Slider>

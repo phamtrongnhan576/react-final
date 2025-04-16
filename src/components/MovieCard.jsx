@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, Space, Modal } from "antd";
 import { FaPlay, FaStar } from "react-icons/fa";
 
-const MovieCard = ({ movie, isShowing }) => {
+const MovieCard = ({ movie }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [trailerUrl, setTrailerUrl] = useState("");
 
@@ -100,21 +100,14 @@ const MovieCard = ({ movie, isShowing }) => {
                         }}
                     />
                 </div>
-                <div className="absolute bottom-[10%] left-[50%] translate-x-[-50%] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 px-4 py-3 rounded-xl flex-col">
-                    <div className="text-white text-lg font-semibold mb-2 text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
+                <div className="absolute bottom-[10%] left-[50%] translate-x-[-50%] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 px-4 py-3 flex-col w-full">
+                    <div className="text-white text-lg font-semibold mb-2 text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px] ">
                         {movie.tenPhim}
                     </div>
                     <Space size="middle">
-                        {isShowing && (
-                            <Link to={`/movies/${movie.id}`}>
-                                <Button type="primary" danger size="large">
-                                    Đặt vé
-                                </Button>
-                            </Link>
-                        )}
-                        <Link to={`/movies/${movie.id}/details`}>
-                            <Button type="default" size="large">
-                                Xem chi tiết
+                        <Link to={`/Detail/${movie.maPhim}`}>
+                            <Button type="primary" danger size="large">
+                                Đặt vé
                             </Button>
                         </Link>
                     </Space>

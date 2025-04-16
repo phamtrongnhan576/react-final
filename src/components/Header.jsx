@@ -1,11 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { TOKEN, USER_LOGIN } from "../utils/settings";
 
 const Header = () => {
     const [indicatorStyle, setIndicatorStyle] = useState({});
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navRef = useRef(null);
     const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem(TOKEN);
+        const user = localStorage.getItem(USER_LOGIN);
+        setIsLoggedIn(!!(token && user));
+    }, [location]);
 
     const menuItems = [
         { key: "home", label: "HOME", to: "/" },
@@ -15,18 +24,12 @@ const Header = () => {
             to: "/showing-movies",
         },
         { key: "coming-movie", label: "COMING MOVIE", to: "/coming-movie" },
-        { key: "login", label: "LOGIN", to: "/login" },
     ];
 
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > 0) {
-                setIsScrolled(true);
-            } else {
-                setIsScrolled(false);
-            }
+            setIsScrolled(window.scrollY > 0);
         };
-
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
@@ -65,23 +68,99 @@ const Header = () => {
                     </div>
                     <nav className="relative" ref={navRef}>
                         <ul className="flex">
-                            {menuItems.map((item) => (
-                                <li key={item.key}>
+                            {menuItems.map(({ key, label, to }) => (
+                                <li key={key}>
                                     <NavLink
-                                        to={item.to}
+                                        to={to}
                                         className={({ isActive }) =>
                                             `relative text-white hover:text-gray-200 py-2 px-4 text-[16px] pb-5
-                                            after:content-[''] after:absolute after:left-0 after:bottom-[-26%] after:w-full after:h-[3px] 
-                                            after:bg-gray-400/50  
-                                            ${isActive ? "active " : ""}`
+                                             after:content-[''] after:absolute after:left-0 after:bottom-[-26%] after:w-full after:h-[3px] 
+                                             after:bg-gray-400/50 ${
+                                                 isActive ? "active" : ""
+                                             }`
                                         }
                                     >
-                                        {item.label}
+                                        {label}
                                     </NavLink>
                                 </li>
                             ))}
-                        </ul>
 
+                            {isLoggedIn ? (
+                                <li key="profile">
+                                    <NavLink
+                                        to="/profile"
+                                        className={({ isActive }) =>
+                                            `group relative text-white hover:text-gray-200 py-2 px-4 text-[16px] pb-5
+                                    after:content-[''] after:absolute after:left-0 after:bottom-[-26%] after:w-full after:h-[3px] 
+                                    after:bg-gray-400/50 ${
+                                        isActive ? "active" : ""
+                                    }`
+                                        }
+                                    >
+                                        PROFILE
+                                        <div className="absolute hidden group-hover:block bg-[#2a2e38] text-white rounded-md w-40 top-full left-0  z-50">
+                                            <ul className="">
+                                                <li
+                                                    className="px-4 py-3 hover:bg-[#FFA500] cursor-pointer rounded-t-md"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        navigate("/profile");
+                                                    }}
+                                                >
+                                                    Porfile
+                                                </li>
+                                                {JSON.parse(
+                                                    localStorage.getItem(
+                                                        USER_LOGIN
+                                                    )
+                                                )?.maLoaiNguoiDung ===
+                                                    "QuanTri" && (
+                                                    <li
+                                                        className="px-4 py-3 hover:bg-[#FFA500] cursor-pointer"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            navigate("/admin");
+                                                        }}
+                                                    >
+                                                        Admin Page
+                                                    </li>
+                                                )}
+                                                <li
+                                                    className="px-4 py-3 hover:bg-[#FFA500] text-red-500 cursor-pointer rounded-b-md"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        localStorage.removeItem(
+                                                            TOKEN
+                                                        );
+                                                        localStorage.removeItem(
+                                                            USER_LOGIN
+                                                        );
+                                                        navigate("/");
+                                                    }}
+                                                >
+                                                    Logout
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                            ) : (
+                                <li key="login">
+                                    <NavLink
+                                        to="/login"
+                                        className={({ isActive }) =>
+                                            `relative text-white hover:text-gray-200 py-2 px-4 text-[16px] pb-5
+                                             after:content-[''] after:absolute after:left-0 after:bottom-[-26%] after:w-full after:h-[3px] 
+                                             after:bg-gray-400/50 ${
+                                                 isActive ? "active" : ""
+                                             }`
+                                        }
+                                    >
+                                        LOGIN
+                                    </NavLink>
+                                </li>
+                            )}
+                        </ul>
                         <div
                             className="absolute bottom-[-125%] h-[3px] bg-[#FFA500] z-10 rounded-full"
                             style={indicatorStyle}

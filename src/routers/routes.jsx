@@ -3,7 +3,8 @@ import Home from "../pages/Home";
 import SeatSelection from "../pages/SeatSelection";
 import Detail from "../pages/Detail";
 import Error404 from "../pages/Error404";
-
+import Login from "../pages/Login";
+import SignUp from "../pages/SignUp";
 export const routes = [
     {
         path: "/",
@@ -18,12 +19,20 @@ export const routes = [
                 element: <Home />,
             },
             {
-                path: "/SeatSelection",
+                path: "/SeatSelection/:maLichChieu",
                 element: <SeatSelection />,
             },
             {
-                path: "/Detail",
+                path: "/Detail/:maPhim",
                 element: <Detail />,
+            },
+            {
+                path: "/login",
+                element: <Login />,
+            },
+            {
+                path: "/signup",
+                element: <SignUp />,
             },
         ],
     },
