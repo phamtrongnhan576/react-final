@@ -4,130 +4,94 @@
     max-width: calc(100% - 48px);
     margin: 0 auto;
 }
+
 * {
     font-family: "roboto", sans-serif;
 }
-/* html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
+
+.custom-container {
+    width: 1170px;
+    max-width: calc(100% - 48px);
+    margin: 0 auto;
+}
+.ant-tabs-left > .ant-tabs-content-holder {
+    border-left: none;
+}
+.ant-tabs-ink-bar {
+    height: 3px;
+    border-radius: 999px;
 }
 
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-    display: block;
+.ant-tabs .ant-tabs-ink-bar {
+    background-color: #ffa500;
+    height: 3px;
 }
-body {
-    line-height: 1;
+
+.ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar {
+    height: 3px;
 }
-ol,
-ul {
-    list-style: none;
+
+.ant-tabs-nav::before {
+    border-bottom: none !important;
 }
-blockquote,
-q {
-    quotes: none;
+
+.ant-modal .ant-modal-content {
+    padding: 0;
 }
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-    content: "";
-    content: none;
+.ant-tabs-left > .ant-tabs-nav .ant-tabs-tab {
+    padding: 0;
+    margin: 0;
 }
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-} */
+.ant-tabs-left > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab {
+    margin-top: 0;
+}
+
+.slick-prev::before,
+.slick-next::before {
+    display: none !important;
+}
+
+.slick-arrow {
+    z-index: 999;
+}
+
+.slick-prev {
+    left: -33px !important;
+}
+
+.cinema-tabs .ant-tabs-ink-bar {
+    background-color: #ffa500 !important;
+    width: 4px !important;
+    border-radius: 4px;
+}
+
+.cinema-tabs .ant-tabs-tab {
+    transition: all 0.3s ease;
+    padding: 8px !important;
+    margin: 8px 0;
+    background-color: transparent !important;
+}
+.ant-tabs > .ant-tabs-nav .ant-tabs-nav-more {
+    display: none;
+}
+
+.custom-tab_detail .ant-tabs-ink-bar {
+    width: auto !important;
+}
+.custom-tab_detail .ant-tabs .ant-tabs-tab {
+    color: white;
+}
+.custom-tabs .ant-tabs-tab {
+    margin: 0;
+}
+.custom-tabs .ant-tabs .ant-tabs-tab {
+    display: initial;
+}
+.custom-tabs .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #ffa500;
+}
+
+.will-change-transform {
+    will-change: transform;
+    backface-visibility: hidden;
+}

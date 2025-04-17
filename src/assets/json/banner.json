@@ -1,0 +1,29 @@
+[
+    {
+        "maBanner": 1,
+        "maPhim": 1282,
+        "tenPhim": "JOKER",
+        "moTa": "PUT ON A HAPPY FACE",
+        "hinhAnh": "https://m.media-amazon.com/images/M/MV5BNGVjNWI4ZGUtNzE0MS00YTJmLWE0ZDctN2ZiYTk2YmI3NTYyXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_.jpg",
+        "ngayPhatHanh": "2019-10-04",
+        "trailer": "https://youtu.be/zAGVQLHvwOY?si=i6azgNaYfujbNdHx"
+    },
+    {
+        "maBanner": 2,
+        "maPhim": 1283,
+        "tenPhim": "KENSHIN",
+        "moTa": "REMORSE AND ATONEMENT",
+        "hinhAnh": "https://occ-0-8407-1007.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABZOAOc-q8RUSqzk1sQDO883iEMF22uzQgD91nbY_Z4M3ohgK2Of59u1BdN2xFocS2ecRyA9Hg6wJn3Rhn7dIyPH7t6R3C0V6EpO0.jpg?r=de0",
+        "ngayPhatHanh": "2021-04-23",
+        "trailer": "https://youtu.be/s0vN_2MRR50?si=FPGCq54SQbXEmo3S"
+    },
+    {
+        "maBanner": 3,
+        "maPhim": 1284,
+        "tenPhim": "SHOUGUN",
+        "moTa": "POWER HONER KATANA",
+        "hinhAnh": "https://comicbook.com/wp-content/uploads/sites/4/2025/01/FX-NETWORK-SHOGUN-SEASON-2.jpg",
+        "ngayPhatHanh": "2024-02-27",
+        "trailer": "https://youtu.be/yAN5uspO_hk?si=hFeqXbU9lI1gY2r-"
+    }
+]

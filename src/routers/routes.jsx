@@ -6,9 +6,8 @@ import Detail from "../pages/Detail";
 import Error404 from "../pages/Error404";
 import AdminDashBoardPage from "../pages/admin/AdminDashboardPage.jsx";
 import AdminUsersPage from "../pages/admin/AdminUsersPage.jsx";
-import LoginPage from "../pages/auth/pages/Login.jsx";
-import RegisterPage from "../pages/auth/pages/Register.jsx";
-import LayoutAuth from "../pages/auth/layout.jsx";
+import Login from "../pages/Login";
+import SignUp from "../pages/SignUp";
 
 export const routes = [
   {
@@ -25,12 +24,20 @@ export const routes = [
         element: <Home />,
       },
       {
-        path: "/SeatSelection",
+        path: "/SeatSelection/:maLichChieu",
         element: <SeatSelection />,
       },
       {
-        path: "/Detail",
+        path: "/Detail/:maPhim",
         element: <Detail />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <SignUp />,
       },
     ],
   },
@@ -45,15 +52,4 @@ export const routes = [
       { path: "*", element: <Error404 /> },
     ],
   },
-  //Tuyến đường cho auth
-  {
-    path: "/auth",
-    element: <LayoutAuth />,
-    children: [
-      { path: "login", element: <LoginPage /> },
-      { path: "register", element: <RegisterPage /> },
-    ],
-  },
-  // 404 toàn cục
-  { path: "*", element: <Error404 /> },
 ];

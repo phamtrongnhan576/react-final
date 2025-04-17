@@ -2,10 +2,9 @@ import React from "react";
 
 const Footer = () => {
     return (
-        <footer className="bg-black text-white pt-12 pb-6 px-4">
+        <footer className="bg-black text-white pt-12 pb-6 px-4 ">
             <div className="container mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    {/* Brand Info */}
+                <div className="grid grid-cols-1 md:grid-cols-4">
                     <div className="col-span-1">
                         <h2 className="text-2xl font-bold mb-4">MoviesHand</h2>
                         <p className="text-gray-400 mb-4">
@@ -14,15 +13,8 @@ const Footer = () => {
                             trust us. With lesson, study becomes
                             <br />a lot easier with us.
                         </p>
-                        <div className="flex space-x-4">
-                            <span>✔</span>
-                            <span>f</span>
-                            <span>in</span>
-                            <span>💹</span>
-                        </div>
                     </div>
 
-                    {/* Company Links */}
                     <div className="col-span-1">
                         <h3 className="text-lg font-semibold mb-4">Company</h3>
                         <ul className="space-y-2">
@@ -61,7 +53,6 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Support Links */}
                     <div className="col-span-1">
                         <h3 className="text-lg font-semibold mb-4">Support</h3>
                         <ul className="space-y-2">
@@ -100,7 +91,6 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Address Info */}
                     <div className="col-span-1">
                         <h3 className="text-lg font-semibold mb-4">Address</h3>
                         <address className="text-gray-400 not-italic">
@@ -113,8 +103,6 @@ const Footer = () => {
                         </address>
                     </div>
                 </div>
-
-                {/* Copyright */}
                 <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-400">
                     <p>Copyright ©2025 MoviesHand All rights reserved</p>
                 </div>
