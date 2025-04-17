@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Spin, Alert } from "antd";
+import { Spin, Alert, Modal } from "antd";
 import { useParams } from "react-router-dom";
-import { getSeatList } from "../api/moivesAPI";
+import { getSeatList, bookTickets } from "../api/moivesAPI";
+
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
+
 const SeatSelection = () => {
     const { maLichChieu } = useParams();
     const [selectedSeats, setSelectedSeats] = useState([]);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const notyf = new Notyf();
 
     const { data, isLoading, error } = useQuery({
         queryKey: ["seatList", maLichChieu],
@@ -26,7 +32,26 @@ const SeatSelection = () => {
         }
     };
 
+    const handleSubmit = () => {
+        setIsModalVisible(true);
+    };
+
     const totalPrice = selectedSeats.reduce((acc, seat) => acc + seat.giaVe, 0);
+
+    const handleBookTicket = async () => {
+        try {
+            const response = await bookTickets(maLichChieu, selectedSeats);
+            if (response && response.statusCode === 200) {
+                notyf.success("Đặt vé thành công!");
+                setIsModalVisible(false);
+                setSelectedSeats([]);
+            } else {
+                throw new Error(response.message || "Đặt vé thất bại");
+            }
+        } catch (error) {
+            notyf.error(error.message || "Có lỗi xảy ra khi đặt vé");
+        }
+    };
 
     if (isLoading)
         return <Spin size="large" className="flex justify-center mt-10" />;
@@ -112,17 +137,17 @@ const SeatSelection = () => {
                                                     }
                                                     disabled={isBooked}
                                                     className={`
-                   w-8 h-8 rounded-sm text-xs font-bold flex items-center justify-center
-                   ${
-                       isBooked
-                           ? "bg-gray-600 cursor-not-allowed"
-                           : isSelected
-                           ? "bg-green-500 text-white"
-                           : isVip
-                           ? "bg-yellow-500 hover:bg-yellow-400"
-                           : "bg-gray-300 hover:bg-gray-200"
-                   }
-                 `}
+                            w-8 h-8 rounded-sm text-xs font-bold flex items-center justify-center
+                            ${
+                                isBooked
+                                    ? "bg-gray-600 cursor-not-allowed"
+                                    : isSelected
+                                    ? "bg-green-500 text-white"
+                                    : isVip
+                                    ? "bg-yellow-500 hover:bg-yellow-400"
+                                    : "bg-gray-300 hover:bg-gray-200"
+                            }
+                          `}
                                                     title={`Ghế ${
                                                         ghe.tenGhe
                                                     } - ${ghe.giaVe.toLocaleString()}đ`}
@@ -160,12 +185,10 @@ const SeatSelection = () => {
                         </div>
                     </div>
 
-                    {/* Thanh toán */}
                     <div className="lg:w-96 bg-gray-800 p-6 rounded-lg text-white">
                         <h2 className="text-xl font-bold mb-4">
                             Thông tin đặt vé
                         </h2>
-
                         <div className="space-y-4">
                             <div className="flex justify-between">
                                 <span>Số lượng ghế:</span>
@@ -183,14 +206,13 @@ const SeatSelection = () => {
 
                             <div className="pt-4 mt-4 border-t border-gray-700">
                                 <button
-                                    className={`w-full py-3 rounded-lg font-bold transition-colors
-           ${
-               selectedSeats.length > 0
-                   ? "bg-orange-500 hover:bg-orange-600"
-                   : "bg-gray-600 cursor-not-allowed"
-           }
-         `}
+                                    className={`w-full py-3 rounded-lg font-bold transition-colors ${
+                                        selectedSeats.length > 0
+                                            ? "bg-orange-500 hover:bg-orange-600"
+                                            : "bg-gray-600 cursor-not-allowed"
+                                    }`}
                                     disabled={selectedSeats.length === 0}
+                                    onClick={handleSubmit}
                                 >
                                     Đặt vé
                                 </button>
@@ -217,6 +239,18 @@ const SeatSelection = () => {
                     </div>
                 </div>
             </div>
+
+            <Modal
+                title="Xác nhận"
+                visible={isModalVisible}
+                onCancel={() => setIsModalVisible(false)}
+                onOk={handleBookTicket}
+            >
+                <p>
+                    Bạn có chắc chắn muốn đặt {selectedSeats.length} ghế với
+                    tổng số tiền là {totalPrice.toLocaleString()}đ?
+                </p>
+            </Modal>
         </div>
     );
 };
