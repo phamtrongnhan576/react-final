@@ -95,13 +95,15 @@ const UserTable = ({
         <div>
           <button
             onClick={() => onEdit(record)}
-            className="text-blue-500 mr-4 cursor-pointer"
+            className="text-blue-500 hover:text-blue-700 mr-2 cursor-pointer transition-colors duration-200 p-2 rounded-md hover:bg-blue-50"
+            title="Chỉnh sửa"
           >
             <EditOutlined style={{ fontSize: "20px" }} />
           </button>
           <button
             onClick={() => onDelete(record.taiKhoan)}
-            className="text-red-500 cursor-pointer"
+            className="text-red-500 hover:text-red-700 cursor-pointer transition-colors duration-200 p-2 rounded-md hover:bg-red-50"
+            title="Xóa"
           >
             <DeleteOutlined style={{ fontSize: "20px" }} />
           </button>

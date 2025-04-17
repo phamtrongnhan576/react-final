@@ -1,6 +1,56 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import FirmService from "../../services/firmService.js";
 
+export const createShowSchedule = createAsyncThunk(
+  "admin/createShowSchedule",
+  async (scheduleData, { rejectWithValue }) => {
+    try {
+      const data = await FirmService.createShowSchedule(scheduleData);
+
+      return {
+        items: data.items,
+      };
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Lỗi không xác định"
+      );
+    }
+  }
+);
+
+export const fetchCinemaClusters = createAsyncThunk(
+  "admin/fetchCinemaClusters",
+  async (cinemaSystemId, { rejectWithValue }) => {
+    try {
+      const data = await FirmService.getCinemaClusters(cinemaSystemId);
+
+      return {
+        items: data.items,
+      };
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Lỗi không xác định"
+      );
+    }
+  }
+);
+
+export const fetchCinemaSystems = createAsyncThunk(
+  "admin/fetchCinemaSystems",
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await FirmService.getCinemaSystems();
+      return {
+        items: data.items,
+      };
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Lỗi không xác định"
+      );
+    }
+  }
+);
+
 export const fetchFilms = createAsyncThunk(
   "admin/fetchFilms",
   async ({ currentPage = 1, itemsPerPage = 10 }, { rejectWithValue }) => {
@@ -19,7 +69,9 @@ export const fetchFilms = createAsyncThunk(
         },
       };
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Lỗi không xác định"
+      );
     }
   }
 );
@@ -31,8 +83,9 @@ export const updateFilm = createAsyncThunk(
       const updatedFilm = await FirmService.updateFilm(filmData);
       return updatedFilm;
     } catch (error) {
-      console.log("error updateFilm: ", error.message);
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Lỗi không xác định"
+      );
     }
   }
 );
@@ -44,7 +97,9 @@ export const deleteFilm = createAsyncThunk(
       const deletedFilm = await FirmService.deleteFilm(filmId);
       return deletedFilm;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Lỗi không xác định"
+      );
     }
   }
 );
@@ -56,7 +111,9 @@ export const addFilm = createAsyncThunk(
       const newFilm = await FirmService.addFilm(filmData);
       return newFilm;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Lỗi không xác định"
+      );
     }
   }
 );
@@ -65,6 +122,9 @@ const adminFilmSlice = createSlice({
   name: "admin",
   initialState: {
     films: [],
+    cinemaSystems: [],
+    cinemaClusters: [],
+    schedule: null,
     loading: false,
     error: null,
     pagination: {
@@ -84,6 +144,42 @@ const adminFilmSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(createShowSchedule.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createShowSchedule.fulfilled, (state, action) => {
+        state.loading = false;
+        state.schedule = action.payload.items;
+      })
+      .addCase(createShowSchedule.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || action.error.message;
+      })
+      .addCase(fetchCinemaClusters.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCinemaClusters.fulfilled, (state, action) => {
+        state.loading = false;
+        state.cinemaClusters = action.payload.items;
+      })
+      .addCase(fetchCinemaClusters.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || action.error.message;
+      })
+      .addCase(fetchCinemaSystems.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCinemaSystems.fulfilled, (state, action) => {
+        state.loading = false;
+        state.cinemaSystems = action.payload.items;
+      })
+      .addCase(fetchCinemaSystems.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || action.error.message;
+      })
       .addCase(fetchFilms.pending, (state) => {
         state.loading = true;
         state.error = null;

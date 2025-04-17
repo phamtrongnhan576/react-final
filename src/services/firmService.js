@@ -1,6 +1,66 @@
 import apiClient from "./api.js";
 
 const FirmService = {
+  createShowSchedule: async (scheduleData) => {
+    try {
+      const response = await apiClient.post(
+        "/api/QuanLyDatVe/TaoLichChieu",
+        scheduleData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const responseData = response.data || {};
+
+      if (responseData.content) {
+        return {
+          items: responseData.content || [],
+        };
+      }
+    } catch (error) {
+      console.error("Error fetching cinema system data:", error);
+      throw error;
+    }
+  },
+  getCinemaClusters: async (cinemaSystemId) => {
+    try {
+      const response = await apiClient.get(
+        `/api/QuanLyRap/LayThongTinCumRapTheoHeThong?maHeThongRap=${cinemaSystemId}`
+      );
+
+      const responseData = response.data || {};
+
+      if (responseData.content) {
+        return {
+          items: responseData.content || [],
+        };
+      }
+    } catch (error) {
+      console.error("Error fetching cinema system data:", error);
+      throw error;
+    }
+  },
+  getCinemaSystems: async () => {
+    try {
+      const response = await apiClient.get(
+        `/api/QuanLyRap/LayThongTinHeThongRap`
+      );
+
+      const responseData = response.data || {};
+
+      if (responseData.content) {
+        return {
+          items: responseData.content || [],
+        };
+      }
+    } catch (error) {
+      console.error("Error fetching cinema system data:", error);
+      throw error;
+    }
+  },
   getFilmsPaginated: async (currentPage = 1, itemsPerPage = 10) => {
     try {
       const response = await apiClient.get(
@@ -21,7 +81,6 @@ const FirmService = {
       throw error;
     }
   },
-
   deleteFilm: async (filmId) => {
     try {
       const response = await apiClient.delete(
@@ -33,7 +92,6 @@ const FirmService = {
       throw error;
     }
   },
-
   updateFilm: async (filmData) => {
     try {
       const response = await apiClient.post(
@@ -54,7 +112,6 @@ const FirmService = {
 
   addFilm: async (filmData) => {
     try {
-      console.log("Sending film data to API:", filmData);
       const response = await apiClient.post(
         "/api/QuanLyPhim/ThemPhimUploadHinh",
         filmData,

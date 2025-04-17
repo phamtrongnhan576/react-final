@@ -44,9 +44,19 @@ const UserFormModal = ({ visible, onCancel, onSubmit, form, currentUser }) => (
       style: { borderRadius: 8, minWidth: 140 },
     }}
     styles={{
-      body: { padding: 32 },
-      header: { borderBottom: "1px solid #eee" },
-      footer: { borderTop: "1px solid #eee", padding: "20px 32px" },
+      body: {
+        padding: "32px",
+        maxHeight: "70vh",
+        overflowY: "auto",
+      },
+      header: {
+        padding: "24px 32px 16px",
+        borderBottom: "1px solid #f0f0f0",
+      },
+      footer: {
+        padding: "16px 32px 24px",
+        borderTop: "1px solid #f0f0f0",
+      },
     }}
     className="rounded-xl shadow-xl backdrop-blur"
   >

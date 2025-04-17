@@ -1,25 +1,40 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Form, notification, Upload } from "antd";
+import dayjs from "dayjs";
 import {
+  fetchCinemaClusters,
+  fetchCinemaSystems,
   fetchFilms,
   setPagination,
   addFilm,
   deleteFilm,
   updateFilm,
+  createShowSchedule,
 } from "../store/admin/adminFilmSlice";
-import { Form, message, Upload } from "antd";
-import dayjs from "dayjs";
 
 export const useFilmManagement = () => {
-  const dispatch = useDispatch();
-  const { films, loading, error, pagination } = useSelector(
-    (state) => state.adminFilm
-  );
+  const [api, contextHolder] = notification.useNotification();
   const [form] = Form.useForm();
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentFilm, setCurrentFilm] = useState(null);
+  const [currentSchedule, setCurrentSchedule] = useState(null);
+  const [cinemaSystemId, setCinemaSystemId] = useState(null);
   const [fileList, setFileList] = useState([]);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [isScheduleModalVisible, setIsScheduleModalVisible] = useState(false);
+  const [isFetchCinemaSystems, setIsFetchCinemaSystems] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const dispatch = useDispatch();
+  const {
+    schedule,
+    cinemaClusters,
+    cinemaSystems,
+    films,
+    pagination,
+    loading,
+    error,
+  } = useSelector((state) => state.adminFilm);
 
   useEffect(() => {
     dispatch(
@@ -33,6 +48,11 @@ export const useFilmManagement = () => {
   const handlePageChange = (currentPage, itemsPerPage) => {
     dispatch(setPagination({ currentPage, itemsPerPage }));
   };
+
+  useEffect(() => {
+    if (isFetchCinemaSystems) dispatch(fetchCinemaSystems());
+    if (cinemaSystemId) dispatch(fetchCinemaClusters(cinemaSystemId));
+  }, [dispatch, cinemaSystemId, isFetchCinemaSystems, schedule]);
 
   const handleEdit = (film) => {
     setCurrentFilm(film);
@@ -60,7 +80,10 @@ export const useFilmManagement = () => {
     dispatch(deleteFilm(currentFilm.maPhim))
       .unwrap()
       .then(() => {
-        message.success(`Đã xóa phim: ${currentFilm?.tenPhim}`);
+        api.success({
+          message: "Thành công",
+          description: `Đã xóa phim: ${currentFilm?.tenPhim}`,
+        });
         dispatch(
           fetchFilms({
             currentPage: pagination.currentPage,
@@ -69,7 +92,12 @@ export const useFilmManagement = () => {
         );
         setIsDeleteModalVisible(false);
       })
-      .catch((error) => message.error(`Lỗi khi xóa phim: ${error}`));
+      .catch((error) =>
+        api.error({
+          message: "Lỗi",
+          description: `Lỗi: ${error.message || error}`,
+        })
+      );
   };
 
   const handleCreate = () => {
@@ -81,7 +109,10 @@ export const useFilmManagement = () => {
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
+    setIsScheduleModalVisible(false);
+    setIsFetchCinemaSystems(false);
     setFileList([]);
+    setCinemaSystemId(null);
     form.resetFields();
   };
 
@@ -110,7 +141,10 @@ export const useFilmManagement = () => {
       dispatch(action)
         .unwrap()
         .then(() => {
-          message.success(successMessage);
+          api.success({
+            message: "Thành công",
+            description: successMessage,
+          });
           handleModalCancel();
           dispatch(
             fetchFilms({
@@ -119,7 +153,12 @@ export const useFilmManagement = () => {
             })
           );
         })
-        .catch((error) => message.error(`Lỗi: ${error.message || error}`));
+        .catch((error) =>
+          api.error({
+            message: "Lỗi",
+            description: `Lỗi: ${error.message || error}`,
+          })
+        );
     });
   };
 
@@ -129,18 +168,84 @@ export const useFilmManagement = () => {
       file.type === "image/png" ||
       file.type === "image/webp";
     if (!isJpgOrPng) {
-      message.error("Chỉ cho phép tải lên file JPG/PNG/WEBP!");
+      api.error({
+        message: "Lỗi",
+        description: "Chỉ cho phép tải lên file JPG/PNG",
+      });
       return Upload.LIST_IGNORE;
     }
     const isLt1M = file.size / 1024 / 1024 < 1;
     if (!isLt1M) {
-      message.error("Kích thước hình ảnh phải nhỏ hơn 1MB!");
+      api.error({
+        message: "Lỗi",
+        description: "Kích thước hình ảnh phải nhỏ hơn 1MB!",
+      });
       return Upload.LIST_IGNORE;
     }
     return false;
   };
 
+  const handleCreateSchedule = (film) => {
+    setCurrentFilm(film);
+    setCurrentSchedule(null);
+    setIsFetchCinemaSystems(true);
+    setIsScheduleModalVisible(true);
+    setCinemaSystemId(null);
+
+    if (!cinemaSystemId) {
+      form.resetFields();
+    } else {
+      form.setFieldsValue({
+        cinemaSystem: cinemaSystemId,
+      });
+    }
+  };
+
+  const handleModalSubmitSchedule = () => {
+    form.validateFields().then((values) => {
+      const formData = new FormData();
+      formData.append("maPhim", Number(currentFilm.maPhim));
+      formData.append(
+        "ngayChieuGioChieu",
+        values.ngayChieuGioChieu.format("DD/MM/YYYY HH:mm:ss")
+      );
+      formData.append("maRap", values.maRap);
+      formData.append("giaVe", Number(values.giaVe));
+
+      const action = createShowSchedule(formData);
+      const successMessage = `Đã tạo lịch chiếu phim: ${currentFilm.tenPhim}`;
+
+      dispatch(action)
+        .unwrap()
+        .then(() => {
+          handleModalCancel();
+
+          api.success({
+            message: "Thành công",
+            description: successMessage,
+          });
+          dispatch(
+            fetchFilms({
+              currentPage: pagination.currentPage,
+              itemsPerPage: pagination.itemsPerPage,
+            })
+          );
+        })
+        .catch((error) =>
+          api.error({
+            message: "Lỗi",
+            description: `Lỗi: ${error.message || error}`,
+          })
+        );
+    });
+  };
+
   return {
+    contextHolder,
+    schedule,
+    cinemaSystemId,
+    cinemaClusters,
+    cinemaSystems,
     films,
     loading,
     error,
@@ -148,8 +253,13 @@ export const useFilmManagement = () => {
     form,
     isModalVisible,
     isDeleteModalVisible,
+    isScheduleModalVisible,
     currentFilm,
+    currentSchedule,
     fileList,
+    setIsDeleteModalVisible,
+    setCurrentSchedule,
+    setCinemaSystemId,
     setFileList,
     handlePageChange,
     handleEdit,
@@ -158,6 +268,8 @@ export const useFilmManagement = () => {
     handleCreate,
     handleModalCancel,
     handleModalSubmit,
+    handleModalSubmitSchedule,
     beforeUpload,
+    handleCreateSchedule,
   };
 };

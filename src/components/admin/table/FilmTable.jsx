@@ -1,5 +1,9 @@
 import { Table, Pagination, Image } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  CalendarOutlined,
+} from "@ant-design/icons";
 
 const FilmTable = ({
   films,
@@ -8,6 +12,7 @@ const FilmTable = ({
   onPageChange,
   onEdit,
   onDelete,
+  onCreateSchedule,
 }) => {
   const columns = [
     {
@@ -73,15 +78,21 @@ const FilmTable = ({
         <div>
           <button
             onClick={() => onEdit(record)}
-            className="text-blue-500 mr-4 cursor-pointer"
+            className="text-blue-500 cursor-pointer hover:text-blue-700 tmr-2 transition-colors duration-200 p-2 rounded-md hover:bg-blue-50"
           >
             <EditOutlined style={{ fontSize: "20px" }} />
           </button>
           <button
             onClick={() => onDelete(record.maPhim)}
-            className="text-red-500 cursor-pointer"
+            className="text-red-500 cursor-pointer hover:text-red-700 transition-colors duration-200 p-2 rounded-md hover:bg-red-50"
           >
             <DeleteOutlined style={{ fontSize: "20px" }} />
+          </button>
+          <button
+            onClick={() => onCreateSchedule(record)}
+            className="text-green-500 cursor-pointer hover:text-green-700 transition-colors duration-200 p-2 rounded-md hover:bg-green-50"
+          >
+            <CalendarOutlined style={{ fontSize: "20px" }} />
           </button>
         </div>
       ),

@@ -38,9 +38,23 @@ const FilmFormModal = ({
       size: "large",
     }}
     cancelButtonProps={{ size: "large" }}
-    styles={{ body: { padding: "24px", maxHeight: "70vh", overflowY: "auto" } }}
+    styles={{
+      body: {
+        padding: "32px",
+        maxHeight: "70vh",
+        overflowY: "auto",
+      },
+      header: {
+        padding: "24px 32px 16px",
+        borderBottom: "1px solid #f0f0f0",
+      },
+      footer: {
+        padding: "16px 32px 24px",
+        borderTop: "1px solid #f0f0f0",
+      },
+    }}
   >
-    <Form form={form} layout="vertical" className="space-y-4">
+    <Form form={form} layout="vertical" className="space-y-4 px-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <Form.Item
@@ -118,7 +132,7 @@ const FilmFormModal = ({
           label="Hình ảnh phim"
           name="hinhAnh"
           rules={[
-            { required: !currentFilm, message: "Vui lòng tải lên hình ảnh" },
+            { required: !fileList, message: "Vui lòng tải lên hình ảnh" },
           ]}
         >
           <Upload

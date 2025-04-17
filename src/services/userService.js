@@ -18,7 +18,7 @@ const UserService = {
         };
       }
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      console.error("Error searching user data:", error);
       throw error;
     }
   },

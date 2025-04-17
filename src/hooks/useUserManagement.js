@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Form, notification } from "antd";
 import {
   fetchUsers,
   setPagination,
@@ -8,19 +9,19 @@ import {
   updateUser,
   searchUsers,
 } from "../store/admin/adminUserSlice";
-import { Form, message } from "antd";
 
 export const useUserManagement = () => {
-  const dispatch = useDispatch();
-  const { users, loading, error, pagination } = useSelector(
-    (state) => state.adminUser
-  );
-
+  const [api, contextHolder] = notification.useNotification();
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
+
+  const dispatch = useDispatch();
+  const { users, loading, error, pagination } = useSelector(
+    (state) => state.adminUser
+  );
 
   useEffect(() => {
     if (!isSearching) {
@@ -51,7 +52,10 @@ export const useUserManagement = () => {
     dispatch(deleteUser(currentUser.taiKhoan))
       .unwrap()
       .then(() => {
-        message.success(`Đã xóa người dùng: ${currentUser?.hoTen}`);
+        api.success({
+          message: "Thành công",
+          description: `Đã xóa phim: ${currentUser?.hoTen}`,
+        });
         setIsSearching(false);
         dispatch(
           fetchUsers({
@@ -61,7 +65,12 @@ export const useUserManagement = () => {
         );
         setIsDeleteModalVisible(false);
       })
-      .catch((error) => message.error(`Lỗi khi xóa người dùng: ${error}`));
+      .catch((error) =>
+        api.error({
+          message: "Lỗi",
+          description: `Lỗi: ${error.message || error}`,
+        })
+      );
   };
 
   const handleCreate = () => {
@@ -103,7 +112,10 @@ export const useUserManagement = () => {
       dispatch(action)
         .unwrap()
         .then(() => {
-          message.success(successMessage);
+          api.success({
+            message: "Thành công",
+            description: successMessage,
+          });
           handleModalCancel();
           setIsSearching(false);
           dispatch(
@@ -114,7 +126,10 @@ export const useUserManagement = () => {
           );
         })
         .catch((error) =>
-          message.error(`Lỗi: ${error.message || "Không thể xử lý"}`)
+          api.error({
+            message: "Lỗi",
+            description: `Lỗi: ${error.message || error}`,
+          })
         );
     });
   };
@@ -128,20 +143,11 @@ export const useUserManagement = () => {
     setIsSearching(true);
     dispatch(
       searchUsers({
-        keyword,
+        keyword: keyword.trim(),
         currentPage: 1,
         itemsPerPage: pagination.itemsPerPage,
       })
-    )
-      .unwrap()
-      .then(() => {
-        message.success(`Tìm kiếm với từ khóa: ${keyword}`);
-      })
-      .catch(() => {
-        message.error(
-          `Lỗi khi tìm kiếm: ${error.message || "Không thể xử lý"}`
-        );
-      });
+    );
   };
 
   return {
@@ -153,6 +159,8 @@ export const useUserManagement = () => {
     isModalVisible,
     isDeleteModalVisible,
     currentUser,
+    contextHolder,
+    setIsDeleteModalVisible,
     handlePageChange,
     handleEdit,
     handleDelete,

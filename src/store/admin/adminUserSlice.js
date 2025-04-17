@@ -24,7 +24,9 @@ export const searchUsers = createAsyncThunk(
         },
       };
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Lỗi không xác định"
+      );
     }
   }
 );
@@ -48,7 +50,9 @@ export const fetchUsers = createAsyncThunk(
         },
       };
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Lỗi không xác định"
+      );
     }
   }
 );
@@ -60,8 +64,9 @@ export const updateUser = createAsyncThunk(
       const updatedUser = await UserService.updateUser(userData);
       return updatedUser;
     } catch (error) {
-      console.log("error updateUser: ", error.message);
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Lỗi không xác định"
+      );
     }
   }
 );
@@ -73,7 +78,9 @@ export const deleteUser = createAsyncThunk(
       const deletedUser = await UserService.deleteUser(taiKhoan);
       return deletedUser;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Lỗi không xác định"
+      );
     }
   }
 );
@@ -85,7 +92,9 @@ export const addUser = createAsyncThunk(
       const newUser = await UserService.addUser(userData);
       return newUser;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Lỗi không xác định"
+      );
     }
   }
 );
